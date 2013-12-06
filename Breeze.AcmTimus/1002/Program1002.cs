@@ -1,10 +1,12 @@
 ﻿#region usings
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 #endregion
@@ -59,17 +61,19 @@ namespace _1002
 
         static void Main(string[] args)
         {
+            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+
             /*
-             * phone
-             * words count
-             * word1
-             * ...
-             * wordn
-             * 
-             * ... (repeat)
-             * 
-             * -1
-             * */
+                        * phone
+                        * words count
+                        * word1
+                        * ...
+                        * wordn
+                        * 
+                        * ... (repeat)
+                        * 
+                        * -1
+                        * */
 
             do
             {
@@ -92,25 +96,25 @@ namespace _1002
         }
 
 
-        /// <summary>
-        /// 0 oqz
-        /// 1 ij    2 abc   3 def
-        /// 4 gh    5 kl    6 mn
-        /// 7 prs   8 tuv   9 wxy
-        /// </summary>
-        static Dictionary<char, char[]> M = new Dictionary<char, char[]>
-        {
-            {'0', new[] {'o', 'q', 'z'}},
-            {'1', new[] {'i', 'j'}},
-            {'2', new[] {'a', 'b', 'c'}},
-            {'3', new[] {'d', 'e', 'f'}},
-            {'4', new[] {'g', 'h'}},
-            {'5', new[] {'k', 'l'}},
-            {'6', new[] {'m', 'n'}},
-            {'7', new[] {'p', 'r', 's'}},
-            {'8', new[] {'t', 'u', 'v'}},
-            {'9', new[] {'w', 'x', 'y'}}
-        };
+//        /// <summary>
+//        /// 0 oqz
+//        /// 1 ij    2 abc   3 def
+//        /// 4 gh    5 kl    6 mn
+//        /// 7 prs   8 tuv   9 wxy
+//        /// </summary>
+//        static Dictionary<char, char[]> M = new Dictionary<char, char[]>
+//        {
+//            {'0', new[] {'o', 'q', 'z'}},
+//            {'1', new[] {'i', 'j'}},
+//            {'2', new[] {'a', 'b', 'c'}},
+//            {'3', new[] {'d', 'e', 'f'}},
+//            {'4', new[] {'g', 'h'}},
+//            {'5', new[] {'k', 'l'}},
+//            {'6', new[] {'m', 'n'}},
+//            {'7', new[] {'p', 'r', 's'}},
+//            {'8', new[] {'t', 'u', 'v'}},
+//            {'9', new[] {'w', 'x', 'y'}}
+//        };
 
 
         static Dictionary<char, char> Mback = new Dictionary<char, char>
@@ -144,67 +148,14 @@ namespace _1002
         };
 
 
-        static void Solve(string phone, string[] words)
-        {
-            char[][] choices = phone.Select(c => M[c]).ToArray();
-
-            List<List<string>> chains = SolveRecur(-1, choices, new List<string>(), words);
-
-            if (chains.Count == 0)
-                Console.WriteLine(NoSolution);
-            else
-            {
-                int minLen = chains.Min(chain => chain.Count);
-                List<string>[] minChains = chains.Where(chain => chain.Count == minLen).ToArray();
-
-                Console.WriteLine(string.Join(" ", minChains[0]));
-            }
-        }
-
-
-        // list of chaines
-        static List<List<string>> SolveRecur(int letterIndPrev, char[][] choices, List<string> chain, string[] words)
-        {
-            if (letterIndPrev == choices.Length - 1)
-                return new List<List<string>> {chain};
-
-            List<List<string>> rv = new List<List<string>>();
-
-            string[] reduced = words;
-            for (int letterInd = letterIndPrev + 1, i = 0; letterInd < choices.Length; letterInd++,i++)
-            {
-                reduced = ReduceByNextChar(reduced, choices[letterInd], i);
-                if (reduced.Length == 0)
-                    break;
-
-                string[] complete = reduced.Where(x => x.Length == i + 1).ToArray();
-                if (complete.Length == 0)
-                    continue;
-
-                List<List<string>> l =
-                    complete.SelectMany(completeWord => SolveRecur(letterInd, choices, new List<string>(chain) {completeWord}, words))
-                            .ToList();
-
-                rv.AddRange(l);
-            }
-
-            return rv;
-        }
-
-
         const string NoSolution = "No solution.";
-
-
-        static string[] ReduceByNextChar(IEnumerable<string> words, char[] nextChars, int index)
-        {
-            return words.Where(w => w.Length > index && nextChars.Contains(w[index])).ToArray();
-        }
 
 
         static void Solve1(string number, string[] words)
         {
             // number->word
-            Dictionary<string, string[]> numbersToWords = words.GroupBy(ConvertToNumber, x => x).ToDictionary(g => g.Key, g => g.ToArray());
+            Dictionary<string, string[]> numbersToWords = words.GroupBy(ConvertToNumber, x => x)
+                                                               .ToDictionary(g => g.Key, g => g.ToArray());
 
             string[] numbers = numbersToWords.Keys.ToArray();
 
@@ -237,7 +188,6 @@ namespace _1002
 
         static string[] _words;
         static string _bigword;
-        static int _len;
         static List<string>[,] _opt;
         static bool[,] _calced;
 
@@ -245,15 +195,15 @@ namespace _1002
         static List<string> SplitOptimal(string bigword, string[] words)
         {
             _bigword = bigword;
-            _len = bigword.Length;
-            _opt = new List<string>[_len,_len];
-            _calced = new bool[_len,_len];
+            int len = bigword.Length;
+            _opt = new List<string>[len,len];
+            _calced = new bool[len,len];
 
             _words = words.ToArray();
 
-            SplitOptimalRecur(0, _len - 1);
+            SplitOptimalRecur(0, len - 1);
 
-            List<string> rv = _opt[0, _len - 1];
+            List<string> rv = _opt[0, len - 1];
             return rv;
         }
 
@@ -275,8 +225,6 @@ namespace _1002
             if (lefts == null || lefts.Length == 0)
             {
                 SetCalced(l, r, null);
-//                for (int ir = l + 1; ir <= r; ir++)
-//                    SetCalced(l, ir, null);
                 // если нечего поставить, то пути нет
                 return;
             }
@@ -308,12 +256,6 @@ namespace _1002
         }
 
 
-        static string substr(int l, int r)
-        {
-            return _bigword.Substring(l, r - l + 1);
-        }
-
-
         static void SetCalced(int l, int r, List<string> val)
         {
             _opt[l, r] = val;
@@ -321,25 +263,22 @@ namespace _1002
         }
 
 
-        static string __substring;
-
-
         static string TryWhole(int l, int r)
         {
-            //string substring = substr(l, r);
-            __substring = substr(l, r);
-            return _words.FirstOrDefault(x => x == __substring);
+            int len = r - l + 1;
+            return _words.FirstOrDefault(x => x.Length == len && string.Compare(x, 0, _bigword, l, len) == 0);
         }
 
 
         static string[] PutOnLeft(int l, int r)
         {
             // возвращает по одному слову каждой длины, подходящему для слева в данных границах. Первыми короткие
-            //string substring = substr(l, r);
-            string[] wlefts = _words.Where(__substring.StartsWith).GroupBy(x => x.Length)
-                //.OrderBy(g => g.Key)
-                                    .Select(g => g.First()).ToArray();
-            return wlefts.Length == 0 ? null : wlefts;
+            //string[] wlefts = _words.Where(__substring.StartsWith).GroupBy(x => x.Length).Select(g => g.First()).ToArray();
+
+            int len = r - l + 1;
+            string[] wlefts = _words.Where(w => w.Length <= len && string.Compare(w, 0, _bigword, l, w.Length) == 0)
+                                    .GroupBy(w => w.Length).Select(g => g.First()).ToArray();
+            return wlefts;
         }
     }
 }
