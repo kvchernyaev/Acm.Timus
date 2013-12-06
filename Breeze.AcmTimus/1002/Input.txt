@@ -1,32 +1,10 @@
-﻿7325189087
-5
-it
-your
-reality
-real
-our
-4294967296
-5
-it
-your
-reality
-real
-our
-2285064252258219
-5
-long
-false
-cat
-tail
-black
-2285064252258215
-5
-long
-false
-cat
-tail
-black
-1234567890
+﻿2111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111 // 91 length
+4 // bjj jjjj x 22
+bj // 
+bjj // 
+jj // 
+jjjj // 
+1234567890 // ja ehlnr tyz
 10
 jafgl
 n
@@ -52,12 +30,6 @@ aa
 afa
 aaaa
 aafaa
-2111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111 // 91 length
-4
-bj // only 0
-bjj // only 0
-jj // from 1 to 89
-jjjj // from 1 to 87 (begin index)
 72953994777284856983298465189367895127892382885672377321235444325988737612787346332
 1495
 wkd
@@ -479,7 +451,7 @@ patgtkmwtdawtgmkitwdmpt
 atgtkmwtdawtgmkitwdmpt
 tgtkmwtdawtgmkitwdmpt
 gtkmwtdawtgmkitwdmpt
-tkmwtdawtgmkitwdmp6
+tkmwtdawtgmkitwdmpt
 kmwtdawtgmkitwdmpt
 mwtdawtgmkitwdmpt
 wtdawtgmkitwdmpt
@@ -930,7 +902,7 @@ attkmpadppdaiadkgggda
 ttkmpadppdaiadkgggda
 tkmpadppdaiadkgggda
 kmpadppdaiadkgggda
-mpadppdaiadkggg$a
+mpadppdaiadkgggda
 padppdaiadkgggda
 adppdaiadkgggda
 dppdaiadkgggda

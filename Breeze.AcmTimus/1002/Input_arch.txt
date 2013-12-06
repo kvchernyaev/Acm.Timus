@@ -1,0 +1,42 @@
+﻿0012 //1 ooia , solve - o, oia 
+5
+oo
+i
+a
+oia
+o
+2100 //2 solve - aio, o
+5
+oo
+i
+a
+aio
+o
+7325189087 //3 solve - reality our
+5
+it
+your
+reality
+real
+our
+4294967296 //4 no solve
+5
+it
+your
+reality
+real
+our
+2285064252258219 //5 no solve
+5
+long
+false
+cat
+tail
+black
+2285064252258215 //6 cat long black tail ; 228 5064 25225 8215
+5
+long // 5064
+false // 32573
+cat // 228
+tail // 8215
+black // 25225
