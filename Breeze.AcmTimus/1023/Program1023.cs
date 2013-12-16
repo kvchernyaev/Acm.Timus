@@ -152,9 +152,9 @@ namespace _1023
             if (n == 2)
                 return 1;
 
-            double sqrt = Math.Floor(Math.Sqrt(n));
+            ulong edge = n/2;
 
-            for (ulong i = 3; i <= sqrt; i++)
+            for (ulong i = 3; i <= edge; i++)
                 if (n%i == 0)
                     return i - 1;
 
