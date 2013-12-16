@@ -125,7 +125,9 @@ namespace _12_1133_201
                     break;
 #endif
 
-                long res = Solve(ar);
+                //Console.WriteLine("FUCK " + CalcByPrev(100, new Dictionary<long, long>(){{0,1},{1,1}}));
+
+                decimal res = Solve(ar);
 #if ONLINE_JUDGE
                 Console.WriteLine(res);
 #else
@@ -145,9 +147,85 @@ namespace _12_1133_201
         }
 
 
-        static long Solve(long[] ar)
+        static decimal Solve(long[] ar)
         {
-            
+            long ind1 = ar[0];
+            long ind2 = ar[2];
+            long indFind = ar[4];
+
+            if (indFind == ind1)
+                return ar[1];
+            if (indFind == ind2)
+                return ar[3];
+
+            Dictionary<long, decimal> f = new Dictionary<long, decimal>();
+            f.Add(ind1, ar[1]);
+            f.Add(ind2, ar[3]);
+
+            if (ind1 > ind2)
+            {
+                long tmp = ind1;
+                ind1 = ind2;
+                ind2 = tmp;
+            }
+
+            // ind1 < ind2
+
+            long k = ind2 - ind1; // >=1
+            _F = new long[k];
+
+            if (k > 1)
+            {
+                long indMed = ind1 + 1;
+                decimal val = (f[ind2] - F(k - 2) * f[ind1]) / F(k - 1);
+                f.Add(indMed, val);
+            }
+
+            // calculated indexes: ind1, ind1+1
+            if (indFind == ind1 + 1)
+                return f[ind1 + 1];
+
+            decimal rv;
+            if (indFind > ind1)
+                rv = CalcByPrev(indFind, f);
+            else
+                rv = CalcByNext(indFind, f);
+            return rv;
+        }
+
+
+        static decimal CalcByPrev(long ind, Dictionary<long, decimal> f)
+        {
+            decimal rv;
+            if (f.TryGetValue(ind, out rv))
+                return rv;
+            rv = CalcByPrev(ind - 1, f) + CalcByPrev(ind - 2, f);
+            f.Add(ind, rv);
+            return rv;
+        }
+
+
+        static decimal CalcByNext(long ind, Dictionary<long, decimal> f)
+        {
+            decimal rv;
+            if (f.TryGetValue(ind, out rv))
+                return rv;
+            rv = CalcByNext(ind + 2, f) - CalcByNext(ind + 1, f);
+            f.Add(ind, rv);
+            return rv;
+        }
+
+
+        static long[] _F;
+
+
+        static long F(long i)
+        {
+            if (i < 2)
+                return 1;
+            if (_F[i] == 0)
+                _F[i] = F(i - 1) + F(i - 2);
+            return _F[i];
         }
     }
 }
