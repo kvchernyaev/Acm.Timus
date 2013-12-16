@@ -1,7 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
-# SharpDevelop 4.3
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Problem1000", "Problem1000\Problem1000.csproj", "{31F55F88-3159-4914-80A7-5AE33AB05E72}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Problem1001", "Problem1001\Problem1001.csproj", "{DD15EA86-94A6-43E2-92AF-25E2AF54F039}"
@@ -19,13 +18,15 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "1017", "1017\1017.csproj", "{1ABA7A62-1AA4-4057-B8E3-C5796862E8BD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B8AC1E21-A83D-4879-95DD-CDE81CAED9D3}"
-	ProjectSection(SolutionItems) = postProject
+	ProjectSection(SolutionItems) = preProject
 		judge_id.txt = judge_id.txt
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Problem1777", "Problem1777\Problem1777.csproj", "{B5E8690A-F09B-48C9-B835-4CC6E612EF88}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Problem1336", "Problem1336\Problem1336.csproj", "{43728D60-34F4-41CE-B7F2-4BC728FF0E18}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "1023", "1023\1023.csproj", "{FE2F515E-24C9-41CF-B5D9-5D2872912E85}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -65,14 +66,18 @@ Global
 		{1ABA7A62-1AA4-4057-B8E3-C5796862E8BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1ABA7A62-1AA4-4057-B8E3-C5796862E8BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1ABA7A62-1AA4-4057-B8E3-C5796862E8BD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B5E8690A-F09B-48C9-B835-4CC6E612EF88}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B5E8690A-F09B-48C9-B835-4CC6E612EF88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B5E8690A-F09B-48C9-B835-4CC6E612EF88}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5E8690A-F09B-48C9-B835-4CC6E612EF88}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B5E8690A-F09B-48C9-B835-4CC6E612EF88}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{43728D60-34F4-41CE-B7F2-4BC728FF0E18}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5E8690A-F09B-48C9-B835-4CC6E612EF88}.Release|Any CPU.Build.0 = Release|Any CPU
 		{43728D60-34F4-41CE-B7F2-4BC728FF0E18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{43728D60-34F4-41CE-B7F2-4BC728FF0E18}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43728D60-34F4-41CE-B7F2-4BC728FF0E18}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{43728D60-34F4-41CE-B7F2-4BC728FF0E18}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43728D60-34F4-41CE-B7F2-4BC728FF0E18}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE2F515E-24C9-41CF-B5D9-5D2872912E85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE2F515E-24C9-41CF-B5D9-5D2872912E85}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE2F515E-24C9-41CF-B5D9-5D2872912E85}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE2F515E-24C9-41CF-B5D9-5D2872912E85}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
