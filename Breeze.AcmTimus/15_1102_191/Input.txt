@@ -1,7 +1,7 @@
 ﻿6
+oneputonininputoutoutput
 puton
 inonputin
-oneputonininputoutoutput
 oneininputwooutoutput
 outpu
 utput

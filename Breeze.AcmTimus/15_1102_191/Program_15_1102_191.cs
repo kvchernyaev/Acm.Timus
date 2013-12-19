@@ -153,6 +153,7 @@ namespace _15_1102_191
                     string s = ReadLineTrim();
                     string res = Solve(s);
                     Console.WriteLine(res);
+                    GC.Collect();
                 }
 
 #if ONLINE_JUDGE
@@ -171,10 +172,50 @@ namespace _15_1102_191
         const string Yes = "YES";
         const string No = "NO";
 
+        static string[] Ws = new string[] {"one", "puton", "out", "output", "in", "input"};
+
 
         static string Solve(string s)
         {
-            return Yes;
+            // может ли s быть конкатенацией над Ws ?
+
+            Tested = new bool[s.Length];
+            return Solve(s, 0) ? Yes : No;
+        }
+
+
+        static bool[] Tested;
+
+
+        static bool Solve(string s, int startIndex)
+        {
+            if (startIndex == s.Length)
+                return true;
+            if (Tested[startIndex])
+                return false;
+
+            foreach (string ps in Ws.Where(w => Test(s, startIndex, w)))
+                if (Solve(s, startIndex + ps.Length))
+                    return true;
+
+            Tested[startIndex] = true;
+            return false;
+        }
+
+
+        static bool Test(string big, int ind, string piece)
+        {
+            //return big.IndexOf(piece, ind, StringComparison.InvariantCultureIgnoreCase) == ind;
+            if (ind >= big.Length)
+                return false;
+
+            if (big.Length - ind < piece.Length)
+                return false;
+
+            for (int i = 0; i < piece.Length; i++)
+                if (big[ind + i] != piece[i])
+                    return false;
+            return true;
         }
     }
 }
