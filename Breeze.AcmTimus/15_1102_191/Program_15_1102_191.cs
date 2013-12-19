@@ -24,9 +24,22 @@ namespace _15_1102_191
         {
             return Console.In.ReadToEnd();
         }
+
+
         static string ReadLine()
         {
             return Console.ReadLine();
+        }
+
+
+        static char ReadChar()
+        {
+            int code = Console.Read();
+            if (code < 0)
+                return (char) 26;
+            return (char) code;
+            ConsoleKeyInfo key = Console.ReadKey(false);
+            return key.KeyChar;
         }
 #else
         static string ReadAll()
@@ -36,6 +49,7 @@ namespace _15_1102_191
 
 
         static int LineIndex = 0;
+        static int CharIndex = 0;
 
 
         static string ReadLine()
@@ -55,6 +69,32 @@ namespace _15_1102_191
             }
 
             return "";
+        }
+
+
+        static char ReadChar()
+        {
+            string[] lines = File.ReadAllLines(InputFilePath);
+            if (LineIndex < lines.Length)
+            {
+                string rv = lines[LineIndex];
+                if (rv.StartsWith("//"))
+                    rv = ReadLine();
+
+                rv = rv.Trim();
+                int i = rv.LastIndexOf("//");
+                if (i >= 0)
+                    rv = rv.Substring(0, i).Trim();
+
+                if (CharIndex < rv.Length)
+                    return rv[CharIndex++];
+
+                CharIndex = 0;
+                LineIndex++;
+                return '\n';
+            }
+
+            return '\n';
         }
 
 
@@ -106,6 +146,8 @@ namespace _15_1102_191
         static int? ReadIntNLine()
         {
             string s = ReadLine();
+            s = s.TrimStart((char) 0xEF, (char) 0xBB, (char) 0xBf, (char) 1103, (char) 9559, (char) 9488);
+
             if (string.IsNullOrEmpty(s))
                 return null;
             return int.Parse(s);
@@ -140,21 +182,19 @@ namespace _15_1102_191
             do
             {
 #endif
-                int? cnt = ReadIntNLine();
-                if (cnt == null || cnt.Value <= 0)
+            int? cnt = ReadIntNLine();
+            if (cnt == null || cnt.Value <= 0)
 #if ONLINE_JUDGE
-                    return;
+                return;
 #else
                     break;
 #endif
 
-                for (int i = 0; i < cnt; i++)
-                {
-                    string s = ReadLineTrim();
-                    string res = Solve(s);
-                    Console.WriteLine(res);
-                    GC.Collect();
-                }
+            for (int i = 0; i < cnt; i++)
+            {
+                bool res = SolveByChars();
+                Console.WriteLine(res ? Yes : No);
+            }
 
 #if ONLINE_JUDGE
 #else
@@ -173,6 +213,62 @@ namespace _15_1102_191
         const string No = "NO";
 
         static string[] Ws = new string[] {"one", "puton", "out", "output", "in", "input"};
+
+
+        static bool SolveByChars()
+        {
+            bool canStart = true;
+
+            int[] indexes = new int[Ws.Length];
+            for (int i = 0; i < indexes.Length; i++)
+                indexes[i] = -1;
+
+            char c = ReadChar();
+
+            do
+            {
+                if (c == '\r')
+                {
+                    c = ReadChar();
+                    return canStart;
+                }
+                if (c == '\n' || c == (char) 26)
+                    return canStart;
+
+                bool wasEnd = false;
+
+                for (int i = 0; i < indexes.Length; i++)
+                {
+                    int indW = indexes[i];
+                    if (indW < 0)
+                        continue;
+
+                    indW++;
+
+                    string w = Ws[i];
+
+                    if (w[indW] != c)
+                        indexes[i] = -1;
+                    else
+                    {
+                        indexes[i] = indW;
+                        if (indW == w.Length - 1)
+                        {
+                            indexes[i] = -1;
+                            wasEnd = true;
+                        }
+                    }
+                }
+
+                if (canStart)
+                    for (int i = 0; i < Ws.Length; i++)
+                        if (Ws[i][0] == c)
+                            indexes[i] = 0;
+
+                c = ReadChar();
+                canStart = wasEnd;
+            } while (true);
+        }
 
 
         static string Solve(string s)
