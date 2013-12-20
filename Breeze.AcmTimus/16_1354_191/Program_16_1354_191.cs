@@ -187,14 +187,18 @@ namespace _16_1354_191
             {
 #endif
                 string s = ReadLineTrim();
-                if (string.IsNullOrEmpty(s))
 #if ONLINE_JUDGE
-                    return;
 #else
+                if (string.IsNullOrEmpty(s))
                     break;
 #endif
 
-
+                string addon = Solve(s);
+#if ONLINE_JUDGE
+                Console.WriteLine(s+addon);
+#else
+                Console.WriteLine(string.Format("{0} : {1} {2}", s, addon, addon.Length));
+#endif
 
 #if ONLINE_JUDGE
 #else
@@ -206,6 +210,35 @@ namespace _16_1354_191
             Console.WriteLine("Press Enter to exit");
             Console.ReadLine();
 #endif
+        }
+
+
+        static string Solve(string s)
+        {
+            for (int i = 1; i < s.Length; i++)
+                if (Test(s, i))
+                    return string.Join("", s.Substring(0, i).Reverse());
+
+            return s;
+        }
+
+
+        static bool Test(string s)
+        {
+            return Test(s, 0);
+        }
+
+
+        static bool Test(string s, int bi)
+        {
+            if (bi == s.Length - 1)
+                return true;
+
+            int n = (s.Length - bi)/2;
+            for (int i = 0; i < n; i++)
+                if (s[bi + i] != s[s.Length - 1 - i])
+                    return false;
+            return true;
         }
     }
 }
