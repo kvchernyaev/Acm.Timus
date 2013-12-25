@@ -205,7 +205,7 @@ namespace _18_1280_192
 
                 ar = ReadIntArray();
 
-                bool res = Solve(subjCount, lims, ar);
+                bool res = Solve(lims, ar);
 
                 Console.WriteLine(res ? "YES" : "NO");
 
@@ -222,24 +222,24 @@ namespace _18_1280_192
         }
 
 
-        static bool Solve(int subjCount, Tuple<int, int>[] lims, int[] ar)
+        static bool Solve(IEnumerable<Tuple<int, int>> limitations, int[] proposedOrder)
         {
-            for (int i = 0; i < lims.Length; i++)
+            foreach (Tuple<int, int> limitation in limitations)
             {
-                int less = lims[i].Item1;
-                int greater = lims[i].Item2;
+                int less = limitation.Item1;
+                int greater = limitation.Item2;
                 if (less == greater)
-                    return false;
+                    return false; // wrong rule
 
-                for (int j = 0; j < ar.Length; j++)
+                foreach (int currentSubj in proposedOrder)
                 {
-                    if (ar[j] == greater)
-                        return false;
-                    if (ar[j] == less)
-                        break;
+                    if (currentSubj == greater)
+                        return false; // first is greater, so rule is contradicted
+                    if (currentSubj == less)
+                        break; // first is smaller, so rule is satisfied
                 }
             }
-            return true;
+            return true; // all rules was satisfied
         }
 
 
