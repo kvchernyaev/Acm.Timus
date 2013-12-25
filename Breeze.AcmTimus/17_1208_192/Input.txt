@@ -1,4 +1,32 @@
-﻿6
+﻿7
+gerostratos scorpio shamgshamg
+zaitsev silverberg cousteau
+zaitsev petersen shamgshamg
+clipper petersen shamgshamg
+clipper bakirelli vasiliadi
+silverberg atn dolly
+knuth dijkstra bellman // answer is 4
+13
+a b c
+b c d
+a e q
+e r t
+q f e
+dd qw ff
+aa f dd
+e q f
+dd ee mm
+vv bb cc
+pp ii uu
+pp a d
+d e q // 5
+2
+a
+a
+2
+a b
+b c
+6
 a b c // 1
 b h j // 2
 c t y // 3
