@@ -223,7 +223,127 @@ namespace _17_1208_192
 
         static int Solve(string[][] commands)
         {
-            throw new NotImplementedException();
+            if (commands.Length == 0)
+                return 0;
+            if (commands.Length == 1)
+                return 1
+                    ;
+            uint[] neibours = new uint[commands.Length];
+
+            for (int i = 0; i < commands.Length - 1; i++)
+                for (int j = i + 1; j < commands.Length; j++)
+                    if (IsNeibour(commands[i], commands[j]))
+                    {
+                        SetBit(ref neibours[i], j);
+                        SetBit(ref neibours[j], i);
+                    }
+
+            int res = SolveByBitmask(neibours);
+            return res;
+        }
+
+
+        static void SetBit(ref uint number, int bitIndex)
+        {
+            int mask = 1 << bitIndex;
+            number = (uint) (number | mask);
+        }
+
+
+        static void SetBitOff(ref uint number, int bitIndex)
+        {
+            int mask = ~(1 << bitIndex);
+            number = (uint) (number & mask);
+        }
+
+
+        static bool IsNeibour(IEnumerable<string> a, IEnumerable<string> b)
+        {
+            return !a.Intersect(b).Any();
+        }
+
+
+        static bool TestBit(uint number, int bitIndex)
+        {
+            int mask = 1 << bitIndex;
+            return (number & mask) != 0;
+        }
+
+
+        static uint[] _graf;
+
+        static uint _usedV = 0;
+
+
+        static int SolveByBitmask(uint[] graf)
+        {
+            _graf = graf;
+
+            List<uint> maxSubgrafs = new List<uint>();
+
+            do
+            {
+                // choose not used vertex
+                int v = FindFirstNulBit(_usedV);
+                if (v < 0)
+                    break;
+
+                uint maxSubgraf = FindMaxFullSubgraf(v);
+                maxSubgrafs.Add(maxSubgraf);
+                _usedV |= maxSubgraf;
+            } while (true);
+
+            int maxSize = maxSubgrafs.Max(subgraf => SizeOfSubgraf(subgraf, _graf.Length));
+            return maxSize;
+        }
+
+
+        static int SizeOfSubgraf(uint subgraf, int grafSize)
+        {
+            int cnt = 0;
+            for (int i = 0; i < grafSize; i++)
+                if (TestBit(subgraf, i))
+                    cnt++;
+            return cnt;
+        }
+
+
+        static uint FindMaxFullSubgraf(int startV)
+        {
+            uint currentGraf = 0;
+            uint commonNeibours = uint.MaxValue;
+
+            int currentV = startV;
+
+            do
+            {
+                SetBit(ref currentGraf, currentV);
+                uint neibours = _graf[currentV];
+                commonNeibours &= neibours;
+                currentV = FindFirstNotNulBit(commonNeibours);
+                if (currentV < 0)
+                    break;
+            } while (true);
+
+            return currentGraf;
+        }
+
+
+        static int FindFirstNulBit(uint number)
+        {
+            for (int i = 0; i < _graf.Length; i++)
+                if (!TestBit(number, i))
+                    return i;
+            return -1;
+        }
+
+
+        static int FindFirstNotNulBit(uint number)
+        {
+            for (int i = 0; i < _graf.Length; i++)
+                if (TestBit(number, i))
+                    return i;
+            return -1;
         }
     }
 }
