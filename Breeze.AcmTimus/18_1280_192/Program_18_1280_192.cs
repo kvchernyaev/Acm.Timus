@@ -228,14 +228,15 @@ namespace _18_1280_192
             {
                 int less = lims[i].Item1;
                 int greater = lims[i].Item2;
+                if (less == greater)
+                    return false;
 
-                bool lessFound = false;
                 for (int j = 0; j < ar.Length; j++)
                 {
-                    if (ar[j] == greater && !lessFound)
+                    if (ar[j] == greater)
                         return false;
                     if (ar[j] == less)
-                        lessFound = true;
+                        break;
                 }
             }
             return true;
