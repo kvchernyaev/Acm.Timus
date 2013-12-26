@@ -1,0 +1,7 @@
+﻿2012 6 3
+a # 1  // (finalist)
+b # 1  //  (finalist)
+a # 2
+d # 3 // (finalist)
+b # 2  // (not finalist !!!)
+c # 1  // (answer)
