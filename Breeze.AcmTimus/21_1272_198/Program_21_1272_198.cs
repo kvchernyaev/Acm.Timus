@@ -14,12 +14,12 @@ using System.Threading.Tasks;
 
 
 
-namespace _20_1138_196
+namespace _21_1272_198
 {
     /// <summary>
-    /// http://acm.timus.ru/problem.aspx?num=1138
+    /// http://acm.timus.ru/problem.aspx?num=1272
     /// </summary>
-    class Program_20_1138_196
+    class Program_21_1272_198
     {
         #region console
 #if ONLINE_JUDGE
@@ -181,6 +181,15 @@ namespace _20_1138_196
         #endregion
 
 
+        static void Log(string s, params object[] objs)
+        {
+#if ONLINE_JUDGE
+#else
+            Console.WriteLine(string.Format(s, objs));
+#endif
+        }
+
+
         static void Main(string[] args)
         {
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
@@ -192,20 +201,21 @@ namespace _20_1138_196
                 int[] ar = ReadIntArray();
 #if ONLINE_JUDGE
 #else
-                if (ar.Length == 0)
+                if (ar == null || ar.Length == 0)
                     break;
 #endif
 
-                int first = ar[1];
-                _max = ar[0];
-                _d = new Dictionary<int, List<int>>();
+                int vertexCount = ar[0]; // <= 10000
+                int tCount = ar[1]; // <=12000
+                int mCount = ar[2]; // <=12000
 
-                List<int> res = Solve(first);
-#if ONLINE_JUDGE
-                Console.WriteLine(res.Count);
-#else
-                Console.WriteLine(string.Format("first {0} max {1} : {3} : {2}", first, _max, string.Join(" ", res), res.Count));
-#endif
+                Dictionary<int, List<int>> tGraf = ReadGraf(tCount);
+                Dictionary<int, List<int>> mGraf = ReadGraf(mCount);
+
+                int neededM = Solve(tGraf, mGraf);
+
+                Console.WriteLine(neededM);
+
 #if ONLINE_JUDGE
 #else
             } while (true);
@@ -219,77 +229,33 @@ namespace _20_1138_196
         }
 
 
-        static int _max;
-
-        static Dictionary<int, List<int>> _d;
-
-
-        static List<int> Solve(int first)
+        static Dictionary<int, List<int>> ReadGraf(int tCount)
         {
-            if (first == _max)
-                return new List<int>() {first};
+            Dictionary<int, List<int>> graf = new Dictionary<int, List<int>>();
 
-            int rem100 = first%100;
-            int kbase = GetKbase(rem100);
-
-            int k = kbase;
-
-            List<int> maxH = new List<int>();
-
-            do
+            for (int t = 0; t < tCount; t++)
             {
-                int next = first*(100 + k)/100; // it is integer
-                if (next > _max)
-                    break;
+                int[] ar = ReadIntArray();
+                int v1 = ar[0] - 1;
+                int v2 = ar[1] - 1;
 
-                List<int> h;
-                if (!_d.TryGetValue(next, out h))
-                    _d[next] = h = Solve(next);
+                List<int> neibours1;
+                if (!graf.TryGetValue(v1, out neibours1))
+                    graf.Add(v1, neibours1 = new List<int>());
+                neibours1.Add(v2);
+                List<int> neibours2;
+                if (!graf.TryGetValue(v2, out neibours2))
+                    graf.Add(v2, neibours2 = new List<int>());
+                neibours2.Add(v1);
+            }
 
-                if (h.Count > maxH.Count)
-                    maxH = h;
-
-                k += kbase;
-            } while (true);
-
-            return new int[] {first}.Concat(maxH).ToList();
+            return graf;
         }
 
 
-        static int GetKbase(int b)
+        static int Solve(Dictionary<int, List<int>> tGraf, Dictionary<int, List<int>> mGraf)
         {
-            // 0<= b <100
-            if (b == 0)
-                return 1;
-            return 100/Nod100(b);
-        }
-
-
-        static int Nod100(int b)
-        {
-            int rv = 1;
-            int bb = b;
-            if (bb%2 == 0)
-            {
-                bb /= 2;
-                rv *= 2;
-                if (bb%2 == 0)
-                {
-                    bb /= 2;
-                    rv *= 2;
-                }
-            }
-            if (bb%5 == 0)
-            {
-                bb /= 5;
-                rv *= 5;
-                if (bb%5 == 0)
-                {
-                    bb /= 5;
-                    rv *= 5;
-                }
-            }
-            return rv;
+            return 10;
         }
     }
 }

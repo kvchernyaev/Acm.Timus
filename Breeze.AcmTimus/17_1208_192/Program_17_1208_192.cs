@@ -16,6 +16,9 @@ using System.Threading.Tasks;
 
 namespace _17_1208_192
 {
+    /// <summary>
+    /// http://acm.timus.ru/problem.aspx?num=1208
+    /// </summary>
     class Program_17_1208_192
     {
         #region console
