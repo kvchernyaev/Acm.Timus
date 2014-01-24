@@ -209,8 +209,8 @@ namespace _21_1272_198
                 int tCount = ar[1]; // <=12000
                 int mCount = ar[2]; // <=12000
 
-                Dictionary<int, List<int>> tGraf = ReadGraf(tCount);
-                Dictionary<int, List<int>> mGraf = ReadGraf(mCount);
+                List<int>[] tGraf = ReadGraf(tCount, vertexCount);
+                List<int>[] mGraf = ReadGraf(mCount, vertexCount);
 
                 int neededM = Solve(tGraf, mGraf);
 
@@ -229,9 +229,9 @@ namespace _21_1272_198
         }
 
 
-        static Dictionary<int, List<int>> ReadGraf(int tCount)
+        static List<int>[] ReadGraf(int tCount, int vertexCount)
         {
-            Dictionary<int, List<int>> graf = new Dictionary<int, List<int>>();
+            List<int>[] graf = new List<int>[vertexCount];
 
             for (int t = 0; t < tCount; t++)
             {
@@ -239,23 +239,98 @@ namespace _21_1272_198
                 int v1 = ar[0] - 1;
                 int v2 = ar[1] - 1;
 
-                List<int> neibours1;
-                if (!graf.TryGetValue(v1, out neibours1))
-                    graf.Add(v1, neibours1 = new List<int>());
-                neibours1.Add(v2);
-                List<int> neibours2;
-                if (!graf.TryGetValue(v2, out neibours2))
-                    graf.Add(v2, neibours2 = new List<int>());
-                neibours2.Add(v1);
+                if (graf[v1] == null)
+                    graf[v1] = new List<int>();
+                graf[v1].Add(v2);
+                if (graf[v2] == null)
+                    graf[v2] = new List<int>();
+                graf[v2].Add(v1);
             }
 
             return graf;
         }
 
 
-        static int Solve(Dictionary<int, List<int>> tGraf, Dictionary<int, List<int>> mGraf)
+        static int Solve(List<int>[] tGraf, List<int>[] mGraf)
         {
-            return 10;
+            int connectivityDomains = ConnectDomains(tGraf);
+
+            return connectivityDomains - 1;
+        }
+
+
+        static int ConnectDomains(List<int>[] graf)
+        {
+            bool[] used = new bool[graf.Length];
+            int usedCount = 0;
+
+            int domains = 0;
+
+            int kernelV = 0;
+
+            do
+            {
+                kernelV = GetFirstFalse(used, kernelV);
+                List<int> accessDomain = AccessDomain(graf, kernelV);
+
+                domains++;
+                usedCount += accessDomain.Count;
+                foreach (int v in accessDomain)
+                    used[v] = true;
+            } while (usedCount < graf.Length);
+
+            return domains;
+        }
+
+
+        static List<int> AccessDomain(List<int>[] graf, int kernelV)
+        {
+            bool[] domain = new bool[graf.Length];
+            domain[kernelV] = true;
+
+            List<int> l = new List<int>();
+            l.Add(kernelV);
+
+            do
+            {
+                int before = l.Count;
+
+                var append = new List<List<int>>();
+                foreach (int v in l)
+                {
+                    List<int> nei = graf[v];
+                    if (nei != null && nei.Count > 0)
+                        append.Add(nei);
+                }
+
+                Merge(domain, l, append);
+
+                if (before == l.Count)
+                    break;
+            } while (true);
+
+            return l;
+        }
+
+
+        static void Merge(bool[] domain, List<int> l, List<List<int>> add)
+        {
+            foreach (List<int> vs in add)
+                foreach (int v in vs)
+                    if (!domain[v])
+                    {
+                        domain[v] = true;
+                        l.Add(v);
+                    }
+        }
+
+
+        static int GetFirstFalse(bool[] ar, int first)
+        {
+            for (int i = first; i < ar.Length; i++)
+                if (!ar[i])
+                    return i;
+            return -1;
         }
     }
 }
