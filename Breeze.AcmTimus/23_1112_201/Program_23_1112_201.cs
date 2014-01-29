@@ -311,15 +311,32 @@ namespace _23_1112_201
                 return new List<int> {0};
 
             Graf = graf;
-            Max = new List<int>(){0};
+            Max = new List<int> {0};
 
             CurrentSubGraf = new int[graf.Length];
 
-            for (int v0 = 0; v0 < graf.Length - 1; v0++)
+            int m = 0;
+            List<int> mi = new List<int>();
+            for (int i = 0; i < graf.Length; i++)
+                if (graf[i].Count == m)
+                    mi.Add(i);
+                else if (graf[i].Count > m)
+                {
+                    m = graf[i].Count;
+                    mi.Add(i);
+                }
+
+            foreach (int v0 in mi)
             {
                 CurrentSubGraf[0] = v0;
                 Recurce(1);
             }
+
+//            for (int v0 = 0; v0 < graf.Length - 1; v0++)
+//            {
+//                CurrentSubGraf[0] = v0;
+//                Recurce(1);
+//            }
 
             return Max;
         }
