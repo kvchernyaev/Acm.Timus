@@ -225,7 +225,12 @@ namespace _25_1586_201
 
                 int n = nN.Value; // 3 <= n <= 10 000
 
+                Stopwatch sw = new Stopwatch();
+                sw.Restart();
                 ulong rv = SolveMatrix(n);
+                //ulong rv = Solve(n);
+                sw.Stop();
+                Log("_ " + sw.ElapsedMilliseconds);
 
 #if ONLINE_JUDGE
                 Console.WriteLine(rv);
@@ -313,11 +318,7 @@ namespace _25_1586_201
                 for (int j = 0; j < 143; j++)
                     matrix[i, j] = (ulong) (primes3[i]%100 == primes3[j]/10 ? 1 : 0);
 
-            Stopwatch sw = new Stopwatch();
-            sw.Restart();
             ulong[,] res = Pow(matrix, n - 3);
-            sw.Stop();
-            Log("_ " + sw.ElapsedMilliseconds);
 
             ulong rv = Sum(res);
 
