@@ -220,8 +220,46 @@ namespace _26_1737_205
         }
 
 
+        static void o(string s)
+        {
+            Console.WriteLine(s);
+        }
+
+
         static void Solve(int n)
         {
+            if (n == 1)
+            {
+                o("a");
+                o("b");
+                o("c");
+                return;
+            }
+            if (n*6 > 100000)
+            {
+                o("TOO LONG");
+                return;
+            }
+
+            var ss = new[] {"abc", "acb", "bac", "bca", "cab", "cba"};
+
+            foreach (string s in ss)
+            {
+                StringBuilder sb = new StringBuilder(n);
+                Consruct(sb, s, n);
+                o(sb.ToString());
+            }
+        }
+
+
+        static void Consruct(StringBuilder sb, string s, int n)
+        {
+            int rem;
+            int count = Math.DivRem(n, 3, out rem);
+            for (int i = 0; i < count; i++)
+                sb.Append(s);
+            for (int i = 0; i < rem; i++)
+                sb.Append(s[i]);
         }
     }
 }
