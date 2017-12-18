@@ -20,3 +20,5 @@ log/
 *.*~
 
 *.dia.autosave
+
+.idea/
