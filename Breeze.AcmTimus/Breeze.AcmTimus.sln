@@ -64,6 +64,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "28_1249_210", "28_1249_210\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Timus1025", "Timus1025\Timus1025.csproj", "{2B346A8E-203A-4D98-99A1-C9860A604A29}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Timus-30-1026", "Timus-30-1026\Timus-30-1026.csproj", "{F01FB927-3933-4DCE-994C-8EB99ADD3642}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -186,6 +188,10 @@ Global
 		{2B346A8E-203A-4D98-99A1-C9860A604A29}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2B346A8E-203A-4D98-99A1-C9860A604A29}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2B346A8E-203A-4D98-99A1-C9860A604A29}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F01FB927-3933-4DCE-994C-8EB99ADD3642}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F01FB927-3933-4DCE-994C-8EB99ADD3642}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F01FB927-3933-4DCE-994C-8EB99ADD3642}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F01FB927-3933-4DCE-994C-8EB99ADD3642}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

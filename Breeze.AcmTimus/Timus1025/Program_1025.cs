@@ -11,7 +11,7 @@ namespace Timus1025
 {
     // http://acm.timus.ru/problem.aspx?space=1&num=1025
     
-    internal class Program
+    internal class Program1025
     {
         
         #region console
