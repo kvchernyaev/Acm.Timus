@@ -131,7 +131,7 @@ namespace Timus_32_1018
         {
             string s = ReadLine();
             return s.Split(new char[] {' ', '\t'}, StringSplitOptions.RemoveEmptyEntries).Select(decimal.Parse)
-                .ToArray();
+                    .ToArray();
         }
 
 
@@ -190,61 +190,46 @@ namespace Timus_32_1018
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
 
             int[] a = ReadIntArray();
-            int n = a[0], q = a[1];
+            int n = a[0], qLeft = a[1], q = n - qLeft;
 
-            elems = new Elem[n + 1];
-            for (int i = 1; i < elems.Length; i++)
-                elems[i] = new Elem();
-
-            input[] inps = new input[n - 1];
+            _elems = new Elem[n + 1];
+            for (int i = 1; i < _elems.Length; i++)
+                _elems[i] = new Elem();
 
             for (int i = 0; i < n - 1; i++)
             {
                 a = ReadIntArray();
-                input inp = new input(a);
-                inps[i] = inp;
+                Input inp = new Input(a);
 
-                elems[inp.a].Childs.Add(new Child(inp.a, inp.b, inp.w));
-                elems[inp.b].Childs.Add(new Child(inp.b, inp.a, inp.w));
+                _elems[inp.a].Childs.Add(new Child(inp.a, inp.b, inp.w));
+                _elems[inp.b].Childs.Add(new Child(inp.b, inp.a, inp.w));
             }
 
-            print(elems);
+            Print(_elems);
             Log("---------------------------");
 
-            clearBackLink(1, -1);
+            ClearBackLink(1, -1);
 
-            print(elems);
+            Print(_elems);
             Log("---------------------------");
-            
-            
-            
         }
 
 
-        private static void clearBackLink(int cur, int from)
+        private static void ClearBackLink(int cur, int from)
         {
-            Elem cure = elems[cur];
+            Elem cure = _elems[cur];
             cure.Childs.RemoveAll(c => c.Cur == from);
-            cure.Childs.ForEach(c => clearBackLink(c.Cur, cur));
+            cure.Childs.ForEach(c => ClearBackLink(c.Cur, cur));
         }
 
 
-        private static void print(Elem[] elems)
-        {
-            for (int i = 1; i < elems.Length; i++)
-            {
-                Log($"{i}: {string.Join("; ", elems[i].Childs.Select(l => $"{l.Cur}->{l.Parent} ({l.W})"))}");
-            }
-        }
-
-
-        private static Elem[] elems;
+        private static Elem[] _elems;
 
 
 
         class Elem
         {
-            public List<Child> Childs = new List<Child>(3);
+            public readonly List<Child> Childs = new List<Child>(3);
         }
 
 
@@ -260,16 +245,24 @@ namespace Timus_32_1018
             }
 
 
-            public int Parent;
-            public int Cur;
-            public int W;
+            public readonly int Parent;
+            public readonly int Cur;
+            public readonly int W;
         }
 
 
 
-        class input
+        private static void Print(IReadOnlyList<Elem> ar)
         {
-            public input(int[] ar)
+            for (int i = 1; i < ar.Count; i++)
+                Log($"{i}: {string.Join("; ", ar[i].Childs.Select(l => $"{l.Cur}->{l.Parent} ({l.W})"))}");
+        }
+
+
+
+        class Input
+        {
+            public Input(int[] ar)
             {
                 a = ar[0];
                 b = ar[1];
@@ -280,21 +273,6 @@ namespace Timus_32_1018
             public int a;
             public int b;
             public int w;
-        }
-
-
-
-        static void EnsureLess(ref int a, ref int b)
-        {
-            if (a > b) swap(ref a, ref b);
-        }
-
-
-        static void swap<T>(ref T a, ref T b)
-        {
-            T tmp = a;
-            a = b;
-            b = tmp;
         }
     }
 }
