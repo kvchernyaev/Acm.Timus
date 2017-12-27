@@ -194,32 +194,33 @@ namespace Timus_32_1018
 
             _elems = new Elem[n + 1];
             for (int i = 1; i < _elems.Length; i++)
-                _elems[i] = new Elem();
+                _elems[i] = new Elem(i);
 
             for (int i = 0; i < n - 1; i++)
             {
                 a = ReadIntArray();
                 Input inp = new Input(a);
 
-                _elems[inp.a].Childs.Add(new Child(inp.a, inp.b, inp.w));
-                _elems[inp.b].Childs.Add(new Child(inp.b, inp.a, inp.w));
+                _elems[inp.a].Childs.Add(new Child(parentI: inp.a, childI: inp.b, w: inp.w));
+                _elems[inp.b].Childs.Add(new Child(parentI: inp.b, childI: inp.a, w: inp.w));
             }
 
             Print(_elems);
             Log("---------------------------");
 
-            ClearBackLink(1, -1);
+            ClearBackLink();
 
             Print(_elems);
             Log("---------------------------");
         }
 
 
-        private static void ClearBackLink(int cur, int from)
+        private static void ClearBackLink(int curI = 1, int? parentI = null)
         {
-            Elem cure = _elems[cur];
-            cure.Childs.RemoveAll(c => c.Cur == from);
-            cure.Childs.ForEach(c => ClearBackLink(c.Cur, cur));
+            Elem cure = _elems[curI];
+            cure.Childs.RemoveAll(c => c.ChildI == parentI);
+            cure.Childs.ForEach(c => ClearBackLink(c.ChildI, curI));
+            cure.ParentI = parentI;
         }
 
 
@@ -230,23 +231,31 @@ namespace Timus_32_1018
         class Elem
         {
             public readonly List<Child> Childs = new List<Child>(3);
+            public int I;
+            public int? ParentI = null;
+
+
+            public Elem(int index)
+            {
+                I = index;
+            }
         }
 
 
 
-        [DebuggerDisplay("{Cur}->{Parent}")]
+        [DebuggerDisplay("{ChildI}->{ParentI}")]
         struct Child
         {
-            public Child(int parent, int cur, int w)
+            public Child(int parentI, int childI, int w)
             {
-                Cur = cur;
+                ChildI = childI;
                 W = w;
-                Parent = parent;
+                ParentI = parentI;
             }
 
 
-            public readonly int Parent;
-            public readonly int Cur;
+            public readonly int ParentI;
+            public readonly int ChildI;
             public readonly int W;
         }
 
@@ -255,7 +264,8 @@ namespace Timus_32_1018
         private static void Print(IReadOnlyList<Elem> ar)
         {
             for (int i = 1; i < ar.Count; i++)
-                Log($"{i}: {string.Join("; ", ar[i].Childs.Select(l => $"{l.Cur}->{l.Parent} ({l.W})"))}");
+                Log(
+                    $"{i}: parent {ar[i].ParentI ?? 0}, childs: {string.Join("; ", ar[i].Childs.Select(l => $"{l.ChildI}->{l.ParentI} ({l.W})"))}");
         }
 
 
