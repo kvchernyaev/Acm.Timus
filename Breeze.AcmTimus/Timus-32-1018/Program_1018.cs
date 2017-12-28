@@ -214,6 +214,64 @@ namespace Timus_32_1018
 
             Print(_elems);
             Log("---------------------------");
+
+            // sort by G - to calc Min array leafs must be first, parents must be second
+            int[] gs = _elems.Select(x => x?.G ?? 0).ToArray();
+            _elemsSortedByG = _elems.ToArray();
+            Array.Sort(gs, _elemsSortedByG, 1, n);
+            Print(_elemsSortedByG);
+            Log("---------------------------");
+
+            SetupMin();
+            PrintMin(_elemsSortedByG);
+            Log("---------------------------");
+        }
+
+
+        private static void PrintMin(IReadOnlyList<Elem> ar)
+        {
+            Log("Min arrays:");
+            for (int i = 1; i < ar.Count; i++)
+            {
+                Log($"{ar[i].I}({i}): parent {ar[i].ParentI ?? 0} W {ar[i].W} G {ar[i].G}");
+                Log(string.Join(" ", ar[i].Min.Select((m, mi) => $"{mi}:{m}")));
+            }
+        }
+
+
+        private static void SetupMin()
+        {
+            // elems are sorted by G
+            foreach (Elem elem in _elemsSortedByG.Skip(1)) // 1..n
+            {
+                int[] min = elem.Min;
+                // 0 .. elem.G, G: 1 if leaf .. n for root
+                min[0] = 0;
+                min[elem.G] = elem.W;
+                for (int q = 1; q < elem.G; q++)
+                {
+                    if (elem.Links.Count == 0) break; // can not be here - elem.G==1
+                    if (elem.Links.Count == 1)
+                    {
+                        min[q] = _elems[elem.Links[0].ChildI].Min[q]; // it is already calced - because they are sorted by G
+                    }
+                    if (elem.Links.Count == 2)
+                    {
+                        int[] formin = new int[q+1];
+                        for (int qLeft = 0; qLeft <= q; qLeft++)
+                        {
+                            int qRight = q - qLeft;
+                            formin[qLeft] = _elems[elem.Links[0].ChildI].Min[qLeft]
+                                            + _elems[elem.Links[1].ChildI].Min[qRight];
+                        }
+                        min[q] = formin.Min();
+                    }
+                    else
+                        throw new Exception(
+                            $"elem {elem.I} has {elem.Links.Count} childs - can calc only binary three");
+
+                }
+            }
         }
 
 
@@ -221,7 +279,7 @@ namespace Timus_32_1018
         {
             int g = _elems[curI].Links.Sum(x => SetupG(x.ChildI)) + 1;
             _elems[curI].G = g;
-            _elems[curI].Min = new int[g+1]; // index 0..g
+            _elems[curI].Min = new int[g + 1]; // index 0..g
             return g;
         }
 
@@ -248,6 +306,7 @@ namespace Timus_32_1018
 
 
         private static Elem[] _elems;
+        private static Elem[] _elemsSortedByG;
 
 
 
@@ -266,8 +325,8 @@ namespace Timus_32_1018
             /// Сколько нод низу вместе с этой
             /// </summary>
             public int G;
-            
-            
+
+
             /// <summary>
             /// index: 0..G, len G+1
             /// </summary>
@@ -304,7 +363,7 @@ namespace Timus_32_1018
         {
             for (int i = 1; i < ar.Count; i++)
                 Log(
-                    $"{i}: parent {ar[i].ParentI ?? 0} W {ar[i].W} G {ar[i].G}, childs: {string.Join("; ", ar[i].Links.Select(l => $"{l.ChildI}->{l.ParentI} ({l.W})"))}");
+                    $"{ar[i].I}({i}): parent {ar[i].ParentI ?? 0} W {ar[i].W} G {ar[i].G}, childs: {string.Join("; ", ar[i].Links.Select(l => $"{l.ChildI}->{l.ParentI} ({l.W})"))}");
         }
 
 
