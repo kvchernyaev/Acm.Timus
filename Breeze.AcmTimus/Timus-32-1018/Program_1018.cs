@@ -10,7 +10,7 @@ using System.Threading;
 
 namespace Timus_32_1018
 {
-    internal class Program
+    internal static class Program1018
     {
         #region console
 #if ONLINE_JUDGE
@@ -201,25 +201,48 @@ namespace Timus_32_1018
                 a = ReadIntArray();
                 Input inp = new Input(a);
 
-                _elems[inp.a].Childs.Add(new Child(parentI: inp.a, childI: inp.b, w: inp.w));
-                _elems[inp.b].Childs.Add(new Child(parentI: inp.b, childI: inp.a, w: inp.w));
+                _elems[inp.a].Links.Add(new Link(parentI: inp.a, childI: inp.b, w: inp.w));
+                _elems[inp.b].Links.Add(new Link(parentI: inp.b, childI: inp.a, w: inp.w));
             }
 
             Print(_elems);
             Log("---------------------------");
 
-            ClearBackLink();
+            SetupParent();
+            SetupG();
+            SetupW();
 
             Print(_elems);
             Log("---------------------------");
         }
 
 
-        private static void ClearBackLink(int curI = 1, int? parentI = null)
+        private static int SetupG(int curI = 1)
+        {
+            int g = _elems[curI].Links.Sum(x => SetupG(x.ChildI)) + 1;
+            _elems[curI].G = g;
+            _elems[curI].Min = new int[g+1]; // index 0..g
+            return g;
+        }
+
+
+        private static int SetupW(int curI = 1)
+        {
+            Elem elem = _elems[curI];
+            int w = elem.Links.Sum(x => SetupW(x.ChildI)) +
+                    (elem.ParentI == null
+                        ? 0
+                        : _elems[elem.ParentI.Value].Links.FirstOrDefault(x => x.ChildI == curI).W);
+            elem.W = w;
+            return w;
+        }
+
+
+        private static void SetupParent(int curI = 1, int? parentI = null)
         {
             Elem cure = _elems[curI];
-            cure.Childs.RemoveAll(c => c.ChildI == parentI);
-            cure.Childs.ForEach(c => ClearBackLink(c.ChildI, curI));
+            cure.Links.RemoveAll(c => c.ChildI == parentI);
+            cure.Links.ForEach(c => SetupParent(c.ChildI, curI));
             cure.ParentI = parentI;
         }
 
@@ -230,9 +253,25 @@ namespace Timus_32_1018
 
         class Elem
         {
-            public readonly List<Child> Childs = new List<Child>(3);
             public int I;
             public int? ParentI = null;
+            public readonly List<Link> Links = new List<Link>(3);
+
+            /// <summary>
+            /// Сколько потеряем веса при срезании этой ноды (вес всех снизу плюс вес родительской ветки)
+            /// </summary>
+            public int W;
+
+            /// <summary>
+            /// Сколько нод низу вместе с этой
+            /// </summary>
+            public int G;
+            
+            
+            /// <summary>
+            /// index: 0..G, len G+1
+            /// </summary>
+            public int[] Min;
 
 
             public Elem(int index)
@@ -244,9 +283,9 @@ namespace Timus_32_1018
 
 
         [DebuggerDisplay("{ChildI}->{ParentI}")]
-        struct Child
+        struct Link
         {
-            public Child(int parentI, int childI, int w)
+            public Link(int parentI, int childI, int w)
             {
                 ChildI = childI;
                 W = w;
@@ -265,7 +304,7 @@ namespace Timus_32_1018
         {
             for (int i = 1; i < ar.Count; i++)
                 Log(
-                    $"{i}: parent {ar[i].ParentI ?? 0}, childs: {string.Join("; ", ar[i].Childs.Select(l => $"{l.ChildI}->{l.ParentI} ({l.W})"))}");
+                    $"{i}: parent {ar[i].ParentI ?? 0} W {ar[i].W} G {ar[i].G}, childs: {string.Join("; ", ar[i].Links.Select(l => $"{l.ChildI}->{l.ParentI} ({l.W})"))}");
         }
 
 
