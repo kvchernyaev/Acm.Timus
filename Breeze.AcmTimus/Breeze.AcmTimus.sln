@@ -70,6 +70,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Timus-31-1024", "Timus-31-1
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Timus-32-1018", "Timus-32-1018\Timus-32-1018.csproj", "{7388DDB8-8ED0-497D-ABDE-D4C2EDBAECE1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Timus-33-1015", "Timus-33-1015\Timus-33-1015.csproj", "{50253B2B-6075-4E70-96A1-D6CBDFD9F9AF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -204,8 +206,14 @@ Global
 		{7388DDB8-8ED0-497D-ABDE-D4C2EDBAECE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7388DDB8-8ED0-497D-ABDE-D4C2EDBAECE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7388DDB8-8ED0-497D-ABDE-D4C2EDBAECE1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50253B2B-6075-4E70-96A1-D6CBDFD9F9AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50253B2B-6075-4E70-96A1-D6CBDFD9F9AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50253B2B-6075-4E70-96A1-D6CBDFD9F9AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50253B2B-6075-4E70-96A1-D6CBDFD9F9AF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection
 EndGlobal
