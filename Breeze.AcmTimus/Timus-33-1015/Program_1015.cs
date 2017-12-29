@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Reflection;
+using System.Text;
 using System.Threading;
 
 
@@ -208,9 +209,8 @@ namespace Timus_33_1015
 
             PrintCubs(cubs);
             Log("--------------------------------");
-            for (int i = 0; i < cubs.Length; i++)
+            foreach (Cub cub in cubs)
             {
-                var cub = cubs[i];
                 cub.Normalize();
                 cub.SetSchema();
             }
@@ -219,14 +219,17 @@ namespace Timus_33_1015
             Log("--------------------------------");
 
             IEnumerable<IGrouping<int, int>> grouped = cubs.GroupBy(x => x.Schema, x => x.I);
-            var rv = grouped.Select(g => new {Min = g.Min(), CubIds = g.OrderBy(x => x).ToList()}).OrderBy(x => x.Min)
+            List<List<int>> rv = grouped.Select(g => g.OrderBy(i => i).ToList()).OrderBy(a => a[0])
                 .ToList();
 
-            Console.WriteLine(rv.Count);
-            foreach (var x in rv)
+            var sb = new StringBuilder();
+            sb.AppendLine(rv.Count.ToString());
+            foreach (List<int> a in rv)
             {
-                Console.WriteLine($"{string.Join(" ", x.CubIds.Select(y => (y + 1).ToString()))}");
+                sb.AppendLine($"{string.Join(" ", a.Select(y => (y + 1).ToString()))}");
             }
+
+            Console.Write(sb.ToString());
         }
 
         private static void PrintCubs(IReadOnlyList<Cub> cubs)
@@ -249,9 +252,7 @@ namespace Timus_33_1015
             /// <summary>
             /// количество очков на левой, правой, верхней, передней, нижней и задней гранях
             /// </summary>
-            public readonly byte[] SchemaInput;
-
-            public byte[] SchemaAr;
+            //public readonly byte[] SchemaInput;
             public int Schema;
 
             public byte Left;
@@ -327,7 +328,6 @@ namespace Timus_33_1015
 
             public void SetSchema()
             {
-                SchemaAr = new byte[6] {Front, Up, Right, Down, Left, Back};
                 Schema = Front + 6 * Up + 36 * Right + 216 * Down + 1296 * Left + 7776 * Back;
             }
 
@@ -385,13 +385,11 @@ namespace Timus_33_1015
                 }
             }
 
-            public int Num => I + 1;
-
 
             public Cub(int i, byte[] schemaInput)
             {
                 I = i;
-                SchemaInput = schemaInput;
+                //SchemaInput = schemaInput;
 
                 Left = schemaInput[0];
                 Right = schemaInput[1];
