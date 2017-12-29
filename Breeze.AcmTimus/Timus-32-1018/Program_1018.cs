@@ -190,7 +190,7 @@ namespace Timus_32_1018
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
 
             int[] a = ReadIntArray();
-            int n = a[0], qLeft = a[1], q = n - qLeft;
+            int n = a[0], qLeft = a[1] + 1 /*сохраняем ноды, а не ветки*/, q = n - qLeft /*сколько нод надо срезать*/;
 
             _elems = new Elem[n + 1];
             for (int i = 1; i < _elems.Length; i++)
@@ -225,17 +225,23 @@ namespace Timus_32_1018
             SetupMin();
             PrintMin(_elemsSortedByG);
             Log("---------------------------");
+
+            Log("answer:");
+            Console.WriteLine(_elems[1].W - _elems[1].Min[q]);
         }
 
 
         private static void PrintMin(IReadOnlyList<Elem> ar)
         {
+#if ONLINE_JUDGE
+#else
             Log("Min arrays:");
             for (int i = 1; i < ar.Count; i++)
             {
                 Log($"{ar[i].I}({i}): parent {ar[i].ParentI ?? 0} W {ar[i].W} G {ar[i].G}");
                 Log(string.Join(" ", ar[i].Min.Select((m, mi) => $"{mi}:{m}")));
             }
+    #endif
         }
 
 
@@ -251,27 +257,46 @@ namespace Timus_32_1018
                 for (int q = 1; q < elem.G; q++)
                 {
                     if (elem.Links.Count == 0) break; // can not be here - elem.G==1
-                    if (elem.Links.Count == 1)
+                    else if (elem.Links.Count == 1)
                     {
-                        min[q] = _elems[elem.Links[0].ChildI].Min[q]; // it is already calced - because they are sorted by G
+                        Elem elemTheOne = _elems[elem.Links[0].ChildI];
+                        min[q] = elemTheOne.Min[q]; // it is already calced - because they are sorted by G
                     }
-                    if (elem.Links.Count == 2)
+                    else if (elem.Links.Count == 2)
                     {
-                        int[] formin = new int[q+1];
-                        for (int qLeft = 0; qLeft <= q; qLeft++)
-                        {
-                            int qRight = q - qLeft;
-                            formin[qLeft] = _elems[elem.Links[0].ChildI].Min[qLeft]
-                                            + _elems[elem.Links[1].ChildI].Min[qRight];
-                        }
-                        min[q] = formin.Min();
+                        min[q] = GetMin(q, elem);
                     }
                     else
                         throw new Exception(
                             $"elem {elem.I} has {elem.Links.Count} childs - can calc only binary three");
-
                 }
             }
+        }
+
+
+        private static int GetMin(int q, Elem elem)
+        {
+            //int[] formin = new int[q + 1];
+            int forminCurrent;
+            int forminMin = int.MaxValue;
+            for (int qLeft = 0; qLeft <= q; qLeft++)
+            {
+                int qRight = q - qLeft;
+                Elem elemLeft = _elems[elem.Links[0].ChildI];
+                Elem elemRight = _elems[elem.Links[1].ChildI];
+
+                if (elemLeft.G < qLeft) continue;
+                if (elemRight.G < qRight) continue;
+
+                int[] minLeft = elemLeft.Min;
+                int[] minRight = elemRight.Min;
+
+                //formin[qLeft] = minLeft[qLeft] + minRight[qRight];
+                forminCurrent = minLeft[qLeft] + minRight[qRight];
+                if (forminCurrent < forminMin) forminMin = forminCurrent;
+            }
+            return forminMin;
+            //return formin.Where(x => x > 0).Min();
         }
 
 
@@ -361,9 +386,12 @@ namespace Timus_32_1018
 
         private static void Print(IReadOnlyList<Elem> ar)
         {
+#if ONLINE_JUDGE
+#else
             for (int i = 1; i < ar.Count; i++)
                 Log(
                     $"{ar[i].I}({i}): parent {ar[i].ParentI ?? 0} W {ar[i].W} G {ar[i].G}, childs: {string.Join("; ", ar[i].Links.Select(l => $"{l.ChildI}->{l.ParentI} ({l.W})"))}");
+    #endif
         }
 
 
