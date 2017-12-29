@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Threading;
 
@@ -12,6 +13,7 @@ namespace Timus_33_1015
     internal class Program1015
     {
         #region console
+
 #if ONLINE_JUDGE
         static string ReadAll()
         {
@@ -99,6 +101,7 @@ namespace Timus_33_1015
 
 
         #region read specific
+
         static string ReadLineTrim()
         {
             return ReadLine().Trim();
@@ -137,7 +140,7 @@ namespace Timus_33_1015
         {
             string s = ReadLine();
             return s.Split(new char[] {' ', '\t'}, StringSplitOptions.RemoveEmptyEntries).Select(decimal.Parse)
-                    .ToArray();
+                .ToArray();
         }
 
 
@@ -176,8 +179,8 @@ namespace Timus_33_1015
         {
             return ulong.Parse(ReadLine());
         }
-        #endregion
 
+        #endregion
 
 
         static void Log(string s, params object[] objs)
@@ -187,8 +190,8 @@ namespace Timus_33_1015
             Console.WriteLine(string.Format(s, objs));
 #endif
         }
-        #endregion
 
+        #endregion
 
 
         public static void Main(string[] args)
@@ -202,17 +205,54 @@ namespace Timus_33_1015
                 byte[] scheme = ReadByteArray(); // 0..5
                 cubs[i] = new Cub(i, scheme);
             }
+
+            PrintCubs(cubs);
+            Log("--------------------------------");
+            for (int i = 0; i < cubs.Length; i++)
+            {
+                var cub = cubs[i];
+                cub.Normalize();
+                cub.SetSchema();
+            }
+
+            PrintCubs(cubs);
+            Log("--------------------------------");
+
+            IEnumerable<IGrouping<int, int>> grouped = cubs.GroupBy(x => x.Schema, x => x.I);
+            var rv = grouped.Select(g => new {Min = g.Min(), CubIds = g.OrderBy(x => x).ToList()}).OrderBy(x => x.Min)
+                .ToList();
+
+            Console.WriteLine(rv.Count);
+            foreach (var x in rv)
+            {
+                Console.WriteLine($"{string.Join(" ", x.CubIds.Select(y => (y + 1).ToString()))}");
+            }
         }
 
+        private static void PrintCubs(IReadOnlyList<Cub> cubs)
+        {
+#if ONLINE_JUDGE
+#else
+            for (int i = 0; i < cubs.Count; i++)
+            {
+                var cub = cubs[i];
+                Log($"{cub.I}: {cub.Front} {cub.Up} {cub.Right} {cub.Down} {cub.Left} {cub.Back}");
+            }
+#endif
+        }
 
 
         class Cub
         {
-            public int I;
+            public readonly int I;
+
             /// <summary>
             /// количество очков на левой, правой, верхней, передней, нижней и задней гранях
             /// </summary>
-            public byte[] SchemaInput;
+            public readonly byte[] SchemaInput;
+
+            public byte[] SchemaAr;
+            public int Schema;
 
             public byte Left;
             public byte Right;
@@ -220,8 +260,131 @@ namespace Timus_33_1015
             public byte Front;
             public byte Down;
             public byte Back;
-            
-            
+
+            #region rotate
+
+            public void RotateLeft()
+            {
+                byte _left = Left;
+                Left = Front;
+                Front = Right;
+                Right = Back;
+                Back = _left;
+            }
+
+            public void RotateRight()
+            {
+                byte _right = Right;
+                Right = Front;
+                Front = Left;
+                Left = Back;
+                Back = _right;
+            }
+
+            public void RotateUp()
+            {
+                byte _up = Up;
+                Up = Front;
+                Front = Down;
+                Down = Back;
+                Back = _up;
+            }
+
+            public void RotateDown()
+            {
+                byte _down = Down;
+                Down = Front;
+                Front = Up;
+                Up = Back;
+                Back = _down;
+            }
+
+            public void RotateClock()
+            {
+                byte _up = Up;
+                Up = Left;
+                Left = Down;
+                Down = Right;
+                Right = _up;
+            }
+
+            public void RotateAnticlock()
+            {
+                byte _up = Up;
+                Up = Right;
+                Right = Down;
+                Down = Left;
+                Left = _up;
+            }
+
+            #endregion
+
+            public void Normalize()
+            {
+                Set1ToFront();
+                Set2Or3ToUp();
+            }
+
+            public void SetSchema()
+            {
+                SchemaAr = new byte[6] {Front, Up, Right, Down, Left, Back};
+                Schema = Front + 6 * Up + 36 * Right + 216 * Down + 1296 * Left + 7776 * Back;
+            }
+
+            private void Set2Or3ToUp()
+            {
+                //if(Front==2){} // can not be - Front~1 now
+                if (Up == 2)
+                {
+                }
+                else if (Left == 2)
+                    RotateClock();
+                else if (Right == 2)
+                    RotateAnticlock();
+                else if (Down == 2)
+                {
+                    RotateClock();
+                    RotateClock();
+                }
+                else if (Back == 2)
+                {
+                    // set 3 to up
+                    // can not be Front(~1 now), Back(~2 now)
+                    if (Up == 3)
+                    {
+                    }
+                    else if (Left == 3)
+                        RotateClock();
+                    else if (Right == 3)
+                        RotateAnticlock();
+                    else if (Down == 3)
+                    {
+                        RotateClock();
+                        RotateClock();
+                    }
+                }
+            }
+
+            private void Set1ToFront()
+            {
+                if (Front == 1)
+                {
+                }
+                else if (Left == 1)
+                    RotateRight();
+                else if (Right == 1)
+                    RotateLeft();
+                else if (Up == 1)
+                    RotateDown();
+                else if (Down == 1)
+                    RotateUp();
+                else if (Back == 1)
+                {
+                    RotateRight();
+                    RotateRight();
+                }
+            }
+
             public int Num => I + 1;
 
 
@@ -229,7 +392,7 @@ namespace Timus_33_1015
             {
                 I = i;
                 SchemaInput = schemaInput;
-                
+
                 Left = schemaInput[0];
                 Right = schemaInput[1];
                 Up = schemaInput[2];
